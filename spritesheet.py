@@ -5,7 +5,8 @@ class Spritesheet:
     def __init__(self, filename):
         self.filename = filename
         self.sprite_sheet = pygame.image.load(filename).convert()
-        if self.filename == 'imgs/trainer_spritesheet.png' or self.filename == 'imgs/rattata_spritesheet.png':
+        if ((self.filename == 'imgs/trainer_spritesheet.png') or 
+            (self.filename == 'imgs/rattata_spritesheet.png')):
             self.meta_data = self.filename.replace('png', 'json')
         else:
             self.meta_data = 'imgs/hit_spritesheet.json'

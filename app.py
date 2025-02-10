@@ -11,7 +11,6 @@ canvas = pygame.Surface((canvas_width, canvas_height))
 pygame.display.set_caption("TartanMon")
 pokefont = pygame.freetype.Font("PokemonGb-RAeo.ttf")
 running = True
-
 trainer = None
 curr_pokemon = None
 hit_player_animation_active = False
@@ -35,8 +34,6 @@ hit_opponent_duration = 400
 hit_opponent_speed = 70
 hit_opponent_frame_index = 0
 last_hit_update = pygame.time.get_ticks()
-
-# michael
 start_bg = pygame.image.load("imgs/startScreen.png")
 guide_bg = pygame.image.load("imgs/guideScreen.png")
 select_bg = pygame.image.load("imgs/selectScreen.png")
@@ -66,7 +63,7 @@ bulbDead = False
 squirtDead = False
 opponent_dead = False
 curr_pokemon_dead = False
-turn = True
+players_turn = True
 
 mouseX = 1
 mouseY = 1
@@ -82,7 +79,7 @@ def reset():
     global hit_player_duration, hit_player_speed, hit_player_frame_index
     global in_start, in_guide, in_select, in_battle, in_win, in_lose, bg
     global pickChar, pickBulb, pickSquirt, charDead, bulbDead, squirtDead
-    global opponent_dead, curr_pokemon_dead, turn
+    global opponent_dead, curr_pokemon_dead, players_turn
     running = True
     trainer =  None
     curr_pokemon = None
@@ -110,4 +107,4 @@ def reset():
     squirtDead = False
     opponent_dead = False
     curr_pokemon_dead = False
-    turn = True
+    players_turn = True

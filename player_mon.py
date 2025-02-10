@@ -2,7 +2,8 @@ import pygame
 import app
 from spritesheet import Spritesheet
 
-player_health_box = pygame.transform.scale(pygame.image.load('imgs/health_box.png'), (450, 150))
+player_health_box = pygame.transform.scale(pygame.image.load('imgs/health_box.png'), 
+                                           (450, 150))
 
 app.hit_bulbasaur_sheet = Spritesheet('imgs/bulbasaur_spritesheet.png')
 app.hit_bulbasaur_frames = [
@@ -46,17 +47,26 @@ class Pokemon:
 
 def spawn_player_mon():
     if app.pickBulb:
-        moves = {0: ['Tackle', 2], 1: ['Vine Whip', 5], 2: ['Razor Leaf', 7], 3: ['Swords Dance', 0]}
-        app.curr_pokemon = Pokemon('bulbasaur', 'imgs/bulbasaur_back.png', 380, moves, 20)
-        app.hit_player_animation = [pygame.transform.scale(sprite, (300, 300)) for sprite in app.hit_bulbasaur_frames]
+        moves = {0: ['Tackle', 2], 1: ['Vine Whip', 5], 2: ['Razor Leaf', 7], 
+                 3: ['Swords Dance', 0]}
+        app.curr_pokemon = Pokemon('bulbasaur', 'imgs/bulbasaur_back.png', 380, 
+                                   moves, 20)
+        app.hit_player_animation = [pygame.transform.scale(sprite, (300, 300)) 
+                                    for sprite in app.hit_bulbasaur_frames]
     elif app.pickChar:
-        moves = {0: ['Scratch', 2], 1: ['Ember', 5], 2: ['Flamethrower', 7], 3: ['Swords Dance', 0]}
-        app.curr_pokemon = Pokemon('charmander', 'imgs/charmander_back.png', 350, moves, 20)
-        app.hit_player_animation = [pygame.transform.scale(sprite, (300, 300)) for sprite in app.hit_charmander_frames]
+        moves = {0: ['Scratch', 2], 1: ['Ember', 5], 2: ['Flamethrower', 7], 
+                 3: ['Swords Dance', 0]}
+        app.curr_pokemon = Pokemon('charmander', 'imgs/charmander_back.png', 350, 
+                                   moves, 20)
+        app.hit_player_animation = [pygame.transform.scale(sprite, (300, 300)) 
+                                    for sprite in app.hit_charmander_frames]
     elif app.pickSquirt:
-        moves = {0: ['Tail Whip', 2], 1: ['Water Gun', 5], 2: ['Hydro Pump', 7], 3: ['Swords Dance', 0]}
-        app.curr_pokemon = Pokemon('squirtle', 'imgs/squirtle_back.png', 380, moves, 20)
-        app.hit_player_animation = [pygame.transform.scale(sprite, (300, 300)) for sprite in app.hit_squirtle_frames]
+        moves = {0: ['Tail Whip', 2], 1: ['Water Gun', 5], 2: ['Hydro Pump', 7], 
+                 3: ['Swords Dance', 0]}
+        app.curr_pokemon = Pokemon('squirtle', 'imgs/squirtle_back.png', 380, 
+                                   moves, 20)
+        app.hit_player_animation = [pygame.transform.scale(sprite, (300, 300)) 
+                                    for sprite in app.hit_squirtle_frames]
 
 def use_player_move(current_gesture):
     if current_gesture == 'fist_palm': key_index = 0
@@ -73,7 +83,6 @@ def use_player_move(current_gesture):
         if app.curr_pokemon.curr_move == 'Swords Dance':
             app.curr_pokemon.swords_dance()
         else:
-            print(app.curr_pokemon.curr_move)
             app.hit_opponent_animation_active = True
             app.hit_opponent_start_time = app.current_time
             app.hit_opponent_frame_index = 0
@@ -97,7 +106,8 @@ def hit_player():
 def hit_player_sprite(): 
     if app.current_time - app.hit_player_start_time < app.hit_player_duration:
         if app.current_time - app.last_player_hit_update > app.hit_player_speed:
-            app.hit_player_frame_index = (app.hit_player_frame_index + 1) % len(app.hit_player_animation)
+            app.hit_player_frame_index = ((app.hit_player_frame_index + 1) % 
+                                          len(app.hit_player_animation))
             app.last_player_hit_update = app.current_time
     else:
         app.hit_player_animation_active = False
@@ -117,7 +127,8 @@ def draw_player_mon():
     app.curr_pokemon.img.set_alpha(app.curr_pokemon.alpha)
     if app.hit_player_animation_active:
         hit_player_sprite()
-        app.canvas.blit(app.hit_player_animation[app.hit_player_frame_index], (80, app.curr_pokemon.y))
+        app.canvas.blit(app.hit_player_animation[app.hit_player_frame_index], 
+                        (80, app.curr_pokemon.y))
     elif app.curr_pokemon.fainted:
         if app.curr_pokemon.alpha > 0:
             player_fade_out()
@@ -141,16 +152,19 @@ def draw_player_health_box():
     # draw health box
     app.canvas.blit(player_health_box, (430, 420))
     # Pokemon name
-    name_text, name_rect = app.pokefont.render(app.curr_pokemon.name.upper(), (0, 0, 0), size = 26)
+    name_text, name_rect = app.pokefont.render(app.curr_pokemon.name.upper(), 
+                                               (0, 0, 0), size = 26)
     name_rect.topleft = (460, 450)
     app.canvas.blit(name_text, name_rect)
     # Pokemon health
     hp_text, hp_rect = app.pokefont.render('20', (0, 0, 0), size = 32)
-    curr_hp_text, curr_hp_rect = app.pokefont.render(str(app.curr_pokemon.hp), (0, 0, 0), size = 32)
+    curr_hp_text, curr_hp_rect = app.pokefont.render(str(app.curr_pokemon.hp), 
+                                                     (0, 0, 0), size = 32)
     hp_rect.topleft = (790, 530)
     curr_hp_rect.center = (728, 542)
     app.canvas.blit(hp_text, hp_rect)
     app.canvas.blit(curr_hp_text, curr_hp_rect)
     # health bar
     if app.curr_pokemon.hp > 0:
-        pygame.draw.line(app.canvas, (77, 205, 59), (620, 507), (620 + app.curr_pokemon.hp * 11.8, 507), 13)
+        pygame.draw.line(app.canvas, (77, 205, 59), (620, 507), 
+                         (620 + app.curr_pokemon.hp * 11.8, 507), 13)

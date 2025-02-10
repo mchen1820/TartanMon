@@ -13,7 +13,8 @@ class Trainer:
             self.sheet.parse_sprite('trainer4.png'),
             self.sheet.parse_sprite('trainer5.png')
         ]
-        self.animation = [pygame.transform.scale(sprite, (300, 300)) for sprite in self.frames]
+        self.animation = [pygame.transform.scale(sprite, (300, 300)) 
+                          for sprite in self.frames]
         self.showing = True
         self.throwing_ball = False
         self.x = 80
@@ -21,7 +22,7 @@ class Trainer:
         self.animation_speed = 200
         self.slide_speed = 20
 
-def throw_ball():
+def draw_trainer():
     if app.trainer.throwing_ball:
         if app.current_time - app.last_update > app.trainer.animation_speed:
             app.trainer.frame_index += 1
@@ -33,8 +34,10 @@ def throw_ball():
         if app.trainer.x > -300:
             app.trainer.x -= app.trainer.slide_speed
         else:
-            app.trainer.showing = False
             app.trainer.throwing_ball = False
+            app.trainer.showing = False
 
-if app.trainer != None:
-    app.canvas.blit(app.trainer.animation[app.trainer.frame_index], (app.trainer.x, app.canvas_height - 300))
+    # draws trainer
+    if app.trainer != None:
+        app.canvas.blit(app.trainer.animation[app.trainer.frame_index], 
+                        (app.trainer.x, app.canvas_height - 300))
