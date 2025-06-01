@@ -83,22 +83,59 @@ while app.running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             app.running = False 
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            # moves to info guide if start button is clicked
+            if app.in_start and pressedStart((app.mouseX, app.mouseY)):
+                toGuide()
+                app.mousePressed = False
+            # moves to selection screen if got it button is clicked
+            elif app.in_guide and pressedGotIt((app.mouseX, app.mouseY)):
+                toSelect()
+                app.mousePressed = False
+            # selects Tartanmon if image is clicked
+            elif app.in_select:
+                if hoverBulb((app.mouseX, app.mouseY)): # choosing Bulbasaur
+                    if not(app.bulbDead):
+                        toBattle() # changes screen to battle screen
+                        app.trainer = Trainer() # initializes trainer sprite
+                        app.pickBulb = True
+                        app.pickChar = False
+                        app.pickSquirt = False
+                        app.curr_pokemon = None
+                        app.curr_pokemon_dead = False
+                elif hoverChar((app.mouseX, app.mouseY)): # choosing Charmander
+                    if not(app.charDead):
+                        toBattle()
+                        app.trainer = Trainer()
+                        app.pickBulb = False
+                        app.pickChar = True
+                        app.pickSquirt = False
+                        app.curr_pokemon = None
+                        app.curr_pokemon_dead = False
+                elif hoverSquirt((app.mouseX, app.mouseY)): # choosing Squirtle
+                    if not(app.squirtDead):
+                        toBattle()
+                        app.trainer = Trainer()
+                        app.pickBulb = False
+                        app.pickChar = False
+                        app.pickSquirt = True
+                        app.curr_pokemon = None
+                        app.curr_pokemon_dead = False
+                elif hoverReturn((app.mouseX, app.mouseY)): #return page
+                        toGuide()
+                        app.mousePressed = False
+            # restarts game if the player has won or lost
+            elif ((app.in_win or app.in_lose) and 
+                    (pressedPlayAgain((app.mouseX, app.mouseY)))):
+                toStart()
+                app.reset()
 
     app.current_time = pygame.time.get_ticks()
 
     screen.fill((0,0,0))
     app.canvas.blit(app.bg, (0,0))
 
-    # resets mouse if user goes out of bounds     
-    if app.mouseX <= 0:
-        app.mouseX = app.canvas_width // 2
-    elif app.mouseX >= screen_width:
-        app.mouseX = screen_width - 1
-    if app.mouseY <= 0:
-        app.mouseY = app.canvas_height // 2
-    elif app.mouseY >= screen_height:
-        app.mouseY = screen_height - 1
-    pygame.mouse.set_pos((app.mouseX,app.mouseY))
+    app.mouseX, app.mouseY = pygame.mouse.get_pos()
 
     # capture frame from OpenCV
     ret, frame = cap.read()
@@ -131,15 +168,17 @@ while app.running:
             hand = hands_detected[0]
             isClick, coord = detect_mouse(hand, detector.fingersUp(hand), 
                                           screen_width)
+            
             if not isClick:
                 app.mousePressed = False
                 wait = 5
-                app.mouseX = coord[0]
-                app.mouseY = coord[1]
-                display_mouse(coord, 'white')
+                withinX = coord[0] >= 0 and coord[0] <= screen_width
+                withinY = coord[1] >= 0 and coord[1] <= screen_height
+                if (withinX and withinY):
+                   app.mouseX = coord[0]
+                   app.mouseY = coord[1]
+                   pygame.mouse.set_pos((app.mouseX,app.mouseY))
             else:
-                app.mouseX = coord[0]
-                app.mouseY = coord[1]
                 wait -= 1
                 if wait == 0:
                     app.mousePressed = True
@@ -180,6 +219,9 @@ while app.running:
                             app.pickSquirt = True
                             app.curr_pokemon = None
                             app.curr_pokemon_dead = False
+                    elif hoverReturn((app.mouseX, app.mouseY)): #return page
+                        toGuide()
+                        app.mousePressed = False
                 # restarts game if the player has won or lost
                 elif ((app.in_win or app.in_lose) and 
                       (pressedPlayAgain((app.mouseX, app.mouseY)))):
@@ -237,28 +279,28 @@ while app.running:
 
     # deals with actions in selection screen
     if app.in_select:
-        app.mousePos = pygame.mouse.get_pos()
+        mousePos = pygame.mouse.get_pos()
         instr_text, instr_rect = app.pokefont.render("CLICK TO CHOOSE", (0,0,0), 
                                                      size = 18)
         instr_rect.center = (450, 535)
         app.canvas.blit(instr_text, instr_rect)
 
         # displays text and arrow when mouse hovers over Tartanmon
-        if hoverBulb(app.mousePos):
+        if hoverBulb(mousePos):
             app.canvas.blit(app.arrowImg, (140, 180))
             if app.bulbDead:
                 warn_text, warn_rect = app.pokefont.render("FAINTED! CAN'T CHOOSE", 
                                                            (0,0,0), size = 18)
                 warn_rect.center = (450, 565)
                 app.canvas.blit(warn_text, warn_rect)
-        elif hoverChar(app.mousePos):
+        elif hoverChar(mousePos):
             app.canvas.blit(app.arrowImg, (405, 180))
             if app.charDead:
                 warn_text, warn_rect = app.pokefont.render("FAINTED! CAN'T CHOOSE", 
                                                            (0,0,0), size = 18)
                 warn_rect.center = (450, 565)
                 app.canvas.blit(warn_text, warn_rect)
-        elif hoverSquirt(app.mousePos):
+        elif hoverSquirt(mousePos):
             app.canvas.blit(app.arrowImg, (680, 180))
             if app.squirtDead:
                 warn_text, warn_rect = app.pokefont.render("FAINTED! CAN'T CHOOSE", 

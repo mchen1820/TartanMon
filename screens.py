@@ -101,3 +101,9 @@ def hoverSquirt(mousePos):
     if (620 <= mouseX <= 820 and 225 <= mouseY <= 455):
         return True
     return False
+
+def hoverReturn(mousePos):
+    mouseX, mouseY = mousePos
+    if (19 <= mouseX <= 100 and 540 <= mouseY <= 580):
+        return True
+    return False
